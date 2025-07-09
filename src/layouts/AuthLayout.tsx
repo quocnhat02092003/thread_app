@@ -8,7 +8,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({children}) => {
         <div className="flex flex-col min-h-screen bg-gray-200">
             <div className="auth-header">
                 {/*Header*/}
-                <img src={image_auth_login} alt="Image"/>
+                <img className="mt-[-50px]" src={image_auth_login} alt="Image"/>
             </div>
             <div className="auth-body">
                 {/*Main Content*/}
