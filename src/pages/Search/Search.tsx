@@ -12,7 +12,7 @@ const Search: React.FC = () => {
       <div className="text-center">
         <h3>Tìm kiếm</h3>
       </div>
-      <div className="w-[90vh] max-w-[90vh] border border-slate-200 px-5 py-5 rounded-md shadow-lg">
+      <div className="w-[90vh] max-w-[90vh] border border-slate-200 px-5 py-5 rounded-md">
         <TextField
           label="Tìm kiếm"
           id="outlined-start-adornment"

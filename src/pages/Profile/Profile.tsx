@@ -8,6 +8,7 @@ import Post from "../../components/Post/Post";
 import { CircularProgress } from "@mui/material";
 import NoData from "./NoData";
 import UploadPost from "../../components/UploadPost/UploadPost";
+import { useSelector } from "react-redux";
 
 const Profile = () => {
   let param: Readonly<Params<string>> = useParams();
@@ -16,6 +17,8 @@ const Profile = () => {
   const [loading, setLoading] = React.useState(true);
 
   const [dataProfile, setDataProfile] = React.useState<any>({});
+
+  const user = useSelector((state: any) => state.auth);
 
   React.useEffect(() => {
     const userData = GetDataProfileUser(param.username || "");
@@ -116,7 +119,9 @@ const Profile = () => {
             <div className="mt-5">
               {type === "thread" && (
                 <div>
-                  <UploadPost style="w-full border-y px-5 py-5" />
+                  {dataProfile.username === user.username && (
+                    <UploadPost style="w-full border-y px-5 py-5" />
+                  )}
                   <NoData message="Chưa có thread nào." />
                   {/* Assuming you will map through posts here */}
                   {/* {dataProfile.posts.map((post: any) => (

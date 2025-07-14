@@ -23,6 +23,9 @@ interface NoLoginDialogProps {
   dialogContent?: string;
   size?: FontAwesomeIconProps["size"];
   type?: string;
+  likes?: number;
+  comments?: number;
+  shares?: number;
 }
 
 const NoLoginDialog = (props: NoLoginDialogProps) => {
@@ -42,7 +45,9 @@ const NoLoginDialog = (props: NoLoginDialogProps) => {
         className="p-2 hover:bg-slate-200 transition-all duration-300 ease-in-out rounded-md"
       >
         <FontAwesomeIcon icon={props.icon} size={props.size} />{" "}
-        {props.type === "react" && <small>210</small>}
+        {props.type === "react" && (
+          <small>{props.likes || props.comments || props.shares}</small>
+        )}
       </button>
       <BootstrapDialog onClose={handleClose} open={open}>
         <DialogContent className="text-center">

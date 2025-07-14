@@ -18,40 +18,31 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Box, Modal } from "@mui/material";
 import React from "react";
+import { useSelector } from "react-redux";
+import PostActions from "./PostActions";
+import moment from "moment";
 
 interface PostProps {
   style?: string;
-  // postId?: string;
-  // postContent?: string;
-  // postImage?: string;
-  // postUser?: {
-  //   username: string;
-  //   displayName: string;
-  //   avatarURL: string;
-  // };
-  // postTime?: string;
-  // postLikes?: number;
-  // postComments?: number;
-  // postShares?: number;
-  // postReposts?: number;
-  // postType?: string; // "thread" | "repost" | "comment"
-  // postReactions?: {
-  //   likes: number;
-  //   comments: number;
-  //   shares: number;
-  //   reposts: number;
-  // };
-  // postReplies?: Array<{
-  //   username: string;
-  //   displayName: string;
-  //   avatarURL: string;
-  //   content: string;
-  //   time: string;
-  // }>;
-  // postMedia?: Array<{
-  //   type: "image" | "video";
-  //   url: string;
-  // }>;
+  avatarURL?: string;
+  username?: string;
+  displayName?: string;
+  introduction?: string;
+  followersCount?: number;
+  isVerified?: boolean;
+  likeCount?: number;
+  commentCount?: number;
+  shareCount?: number;
+  repostCount?: number;
+  postId?: string;
+  postContent?: string;
+  postImage?: [];
+  postUser?: {
+    username: string;
+    displayName: string;
+    avatarURL: string;
+  };
+  postCreatedAt?: string;
 }
 
 const style = {
@@ -66,9 +57,13 @@ const style = {
 
 const Post = (props: PostProps) => {
   const [open, setOpen] = React.useState<boolean>(false);
+
   const handleOpen = () => setOpen(true);
+
   const handleClose = () => setOpen(false);
 
+  const user = useSelector((state: any) => state.auth);
+  console.log("User from Post component:", user);
   return (
     <div
       className={
@@ -81,7 +76,7 @@ const Post = (props: PostProps) => {
         <div className="relative cursor-pointer" onClick={handleOpen}>
           <img
             className="w-[50px] min-w-[50px] h-[50px] rounded-[50%] object-cover"
-            src="https://toyotahatinh.com.vn/wp-content/uploads/2018/07/FVD.png"
+            src={props.avatarURL || "https://i.pravatar.cc/150?img=3"}
             alt="Avatar"
           />
           <div className="absolute bottom-0 right-0 rounded-full">
@@ -89,113 +84,79 @@ const Post = (props: PostProps) => {
           </div>
         </div>
         <div className="w-full ">
-          <UserItem />
-          <p className="text-sm mb-4">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-            voluptatibus. Lorem ipsum dolor sit amet consectetur adipisicing
-            elit. Quisquam, voluptatibus.
-          </p>
-          <Swiper
-            effect={"coverflow"}
-            slidesPerView={2}
-            spaceBetween={10}
-            grabCursor={true}
-            pagination={true}
-            modules={[Pagination]}
-            className="w-[70vh] overflow-hidden"
-          >
-            <SwiperSlide>
-              <img
-                src="https://swiperjs.com/demos/images/nature-1.jpg"
-                style={{
-                  maxWidth: "100%",
-                  height: "auto",
-                  borderRadius: "30px",
-                }}
-                alt="Slide 1"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img
-                src="https://swiperjs.com/demos/images/nature-2.jpg"
-                style={{
-                  maxWidth: "100%",
-                  height: "auto",
-                  borderRadius: "30px",
-                }}
-                alt="Slide 2"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img
-                src="https://swiperjs.com/demos/images/nature-2.jpg"
-                style={{
-                  maxWidth: "100%",
-                  height: "auto",
-                  borderRadius: "30px",
-                }}
-                alt="Slide 2"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img
-                src="https://swiperjs.com/demos/images/nature-2.jpg"
-                style={{
-                  maxWidth: "100%",
-                  height: "auto",
-                  borderRadius: "30px",
-                }}
-                alt="Slide 2"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img
-                src="https://swiperjs.com/demos/images/nature-2.jpg"
-                style={{
-                  maxWidth: "100%",
-                  height: "auto",
-                  borderRadius: "30px",
-                }}
-                alt="Slide 2"
-              />
-            </SwiperSlide>
-          </Swiper>
-          <div className="flex gap-5 mt-2">
-            <div
-            // className="flex items-center cursor-pointer gap-1 p-2 rounded-md hover:bg-slate-300 transition-all duration-300 ease-in-out"
+          <div className="flex flex-row items-center gap-2">
+            <UserItem
+              avatarURL={props.avatarURL}
+              displayName={props.displayName}
+              followersCount={props.followersCount}
+              introduction={props.introduction}
+              isVerified={props.isVerified}
+              username={props.username}
+            />
+            <small className="text-slate-600">
+              {moment(props.postCreatedAt).startOf("day").fromNow()}
+            </small>
+          </div>
+          {props.postContent && <p className="text-sm">{props.postContent}</p>}
+          {props.postImage?.length != 0 && (
+            <Swiper
+              effect={"coverflow"}
+              slidesPerView={2}
+              spaceBetween={10}
+              grabCursor={true}
+              pagination={true}
+              modules={[Pagination]}
+              className="w-[70vh] overflow-hidden mt-4"
             >
+              {props.postImage?.map((image, index) => (
+                <SwiperSlide key={index}>
+                  <img
+                    src={image}
+                    style={{
+                      maxWidth: "100%",
+                      height: "auto",
+                      borderRadius: "30px",
+                    }}
+                    alt={`Slide ${index + 1}`}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
+          {!user.username ? (
+            <div className="flex gap-5 mt-2">
               <NoLoginDialog
+                likes={props.likeCount || 210}
                 icon={faHeart}
                 type="react"
                 dialogTitle="Bạn thích nội dung này ư? Bạn sẽ thích mê Threads."
                 dialogContent="Hãy đăng ký để thích, trả lời và hơn thế nữa."
               />
-            </div>
-            <div
-            // className="flex items-center cursor-pointer gap-1 p-2 rounded-md hover:bg-slate-300 transition-all duration-300 ease-in-out"
-            >
               <NoLoginDialog
+                comments={props.commentCount || 50}
                 icon={faComment}
                 type="react"
                 dialogTitle="Đăng ký để trả lời"
                 dialogContent="Chỉ còn một bước nữa là bạn có thể tham gia cuộc trò chuyện rồi."
               />
-            </div>
-            <div
-            // className="flex items-center cursor-pointer gap-1 p-2 rounded-md hover:bg-slate-300 transition-all duration-300 ease-in-out"
-            >
               <NoLoginDialog
+                shares={props.shareCount || 30}
                 icon={faArrowsRotate}
                 type="react"
                 dialogTitle="Đăng ký để đăng lại"
                 dialogContent="Bạn đã tiến thêm được một bước trong hành trình khơi mào cuộc trò chuyện."
               />
             </div>
-            <div className="flex items-center cursor-pointer gap-1 p-2 rounded-md hover:bg-slate-300 transition-all duration-300 ease-in-out">
-              <FontAwesomeIcon icon={faShare} />
-              <small>210</small>
-            </div>
-          </div>
+          ) : (
+            <PostActions
+              likes={props.likeCount || 210}
+              comments={props.commentCount || 50}
+              shares={props.shareCount || 30}
+              onLike={() => console.log("Liked!")}
+              onComment={() => console.log("Commented!")}
+              onShare={() => console.log("Shared!")}
+            />
+          )}
           <div>
             <Modal
               open={open}
@@ -206,21 +167,26 @@ const Post = (props: PostProps) => {
               <Box sx={style}>
                 <div className="border border-slate-200 bg-white rounded-md shadow-lg p-5">
                   <div className="flex flex-col">
-                    <Link to="/profile">
+                    <Link to={`/profile/${props.postUser?.username}`}>
                       <div className="flex flex-row items-center justify-between gap-3">
                         <div className="flex flex-col gap-1">
                           <p className="w-40 truncate text-[20px] font-bold">
-                            fcbarcelonarewrwer{" "}
+                            {props.username}{" "}
                             <FontAwesomeIcon
                               icon={faCircleCheck}
                               style={{ color: "#74C0FC" }}
                             />
                           </p>
-                          <p className="text-sm w-40 truncate">quocnhat</p>
+                          <p className="text-sm w-40 truncate">
+                            {props.displayName}
+                          </p>
                         </div>
                         <div>
                           <img
-                            src="https://toyotahatinh.com.vn/wp-content/uploads/2018/07/FVD.png"
+                            src={
+                              props.avatarURL ||
+                              "https://i.pravatar.cc/150?img=3"
+                            }
                             alt="Avatar"
                             className="w-[80px] h-[80px] rounded-[50%] object-cover"
                           />
@@ -228,9 +194,12 @@ const Post = (props: PostProps) => {
                       </div>
                     </Link>
                     <p className="text-sm mb-2 w-52 truncate">
-                      Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor
+                      {props.introduction ||
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
                     </p>
-                    <p className="text-sm mb-2">999 người theo dõi</p>
+                    <p className="text-sm mb-2">
+                      {props.followersCount} người theo dõi
+                    </p>
                     <button className="px-3 py-2 bg-blue-300 rounded-lg mt-3">
                       <p>Theo dõi</p>
                     </button>
