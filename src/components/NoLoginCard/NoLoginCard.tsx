@@ -1,6 +1,4 @@
-import { faInstagram } from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import { PiThreadsLogoLight, PiTrademarkRegisteredLight } from "react-icons/pi";
 import { Link } from "react-router-dom";
 
 const NoLoginCard = () => {
@@ -11,15 +9,16 @@ const NoLoginCard = () => {
         Xem mọi người đang nói về điều gì và tham gia cuộc trò chuyện.
       </small>
       <Link to="/login">
-        <button className="bg-blue-200 px-4 py-2 rounded-md my-2 text-sm">
-          <FontAwesomeIcon icon={faInstagram} size="xl" /> Tiếp tục bằng tài
-          khoản Threads
+        <button className="flex items-center gap-1 bg-blue-200 px-4 py-2 rounded-md my-2 text-sm">
+          <PiThreadsLogoLight size="2em" />{" "}
+          <p>Tiếp tục bằng tài khoản Threads</p>
         </button>
       </Link>
       <small>Hoặc</small>
       <Link to="/register">
-        <button className="bg-blue-200 px-4 py-2 rounded-md my-2 text-sm">
-          Đăng ký tài khoản Threads
+        <button className="flex items-center gap-1 bg-blue-200 px-4 py-2 rounded-md my-2 text-sm">
+          <PiTrademarkRegisteredLight size="2em" />
+          <p>Đăng ký tài khoản Threads</p>
         </button>
       </Link>
     </div>

@@ -14,7 +14,7 @@ const AddInformationUser: React.FC = () => {
   const navigate = useNavigate();
 
   const [infoUser, setInfoUser] = React.useState<InfoUser>({
-    id: 0,
+    id: "",
     username: "",
     displayName: "",
     follower: 0,
@@ -25,8 +25,6 @@ const AddInformationUser: React.FC = () => {
     createdAt: new Date(),
     needMoreInfoUser: false,
   });
-
-  console.log("infoUser", infoUser.id);
 
   React.useEffect(() => {
     const getUserInfo = async () => {
@@ -60,11 +58,12 @@ const AddInformationUser: React.FC = () => {
   }, [getInformationUser.displayName]);
 
   function HandleAvatar(event: React.ChangeEvent<HTMLInputElement>) {
-    event.target.files &&
+    if (event.target.files && event.target.files[0]) {
       setGetInformationUser({
         ...getInformationUser,
         avatarURL: URL.createObjectURL(event.target.files[0]),
       });
+    }
   }
 
   async function SubmitFormAddInformation(
@@ -76,7 +75,8 @@ const AddInformationUser: React.FC = () => {
       enqueueSnackbar(response.message, { variant: "success" });
       navigate("/");
     } catch (error: any) {
-      console.log(error);
+      error.response &&
+        enqueueSnackbar("Lỗi khi thêm thông tin", { variant: "error" });
     }
   }
 
@@ -127,14 +127,16 @@ const AddInformationUser: React.FC = () => {
                       className="hidden"
                       id="upload-photo"
                       type="file"
-                      accept="image/*"
+                      accept="image/jpeg"
                     />
-                    <label
-                      className="cursor-pointer p-2 text-white bg-blue-500 rounded-md"
-                      htmlFor="upload-photo"
-                    >
-                      Chọn ảnh đại diện
-                    </label>
+                    <p>
+                      <label
+                        className="border p-2 cursor-pointer border-black rounded-lg hover:bg-black transition ease-in-out duration-200 hover:text-white"
+                        htmlFor="upload-photo"
+                      >
+                        Chọn ảnh đại diện
+                      </label>
+                    </p>
                   </div>
                 </div>
                 <div className="flex justify-around">

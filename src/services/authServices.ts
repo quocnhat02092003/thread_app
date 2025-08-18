@@ -47,3 +47,13 @@ export async function GetUserInformation() {
         throw error;
     }
 }
+
+//Logout user API
+export async function LogoutUser() {
+    try {
+        const response: AxiosResponse = await API.post("/api/auth/logout");
+        return response.data;
+    } catch (error: any) {
+        throw error;
+    }
+}

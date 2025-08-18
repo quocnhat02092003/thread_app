@@ -2,8 +2,12 @@ import { faCircleCheck, faSquarePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import React from "react";
+import { InfoUser } from "../../types/AuthType";
+import { useSelector } from "react-redux";
+import ButtonFollow from "../ButtonFollow/ButtonFollow";
 
 interface UserItemProps {
+  id: string;
   avatarURL?: string;
   username?: string;
   displayName?: string;
@@ -15,6 +19,8 @@ interface UserItemProps {
 const UserItem = (props: UserItemProps) => {
   const [isHovered, setIsHovered] = React.useState<boolean>(false);
 
+  const user: InfoUser = useSelector((state: any) => state.auth);
+
   return (
     <div
       className="relative w-fit"
@@ -22,10 +28,10 @@ const UserItem = (props: UserItemProps) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <Link to={`/profile/${props.username}`}>
-        <strong className="hover:text-blue-500 transition-all duration-300 ease-in-out">
+        <p className="hover:text-blue-500 transition-all duration-300 ease-in-out font-bold">
           {props.username}{" "}
           <FontAwesomeIcon icon={faCircleCheck} style={{ color: "#74C0FC" }} />
-        </strong>
+        </p>
       </Link>
       {isHovered && (
         <div className="absolute left-5 top-full w-[300px] z-[999] border border-slate-200 bg-white rounded-md shadow-lg p-5">
@@ -61,11 +67,9 @@ const UserItem = (props: UserItemProps) => {
             <p className="text-sm mb-2">
               {props.followersCount} người theo dõi
             </p>
-            <button className="px-3 py-2 bg-blue-300 rounded-lg mt-3">
-              <p>
-                <FontAwesomeIcon icon={faSquarePlus} /> Theo dõi
-              </p>
-            </button>
+            {user.username && user.username !== props.username && (
+              <ButtonFollow targetUserId={props.id} />
+            )}
           </div>
         </div>
       )}

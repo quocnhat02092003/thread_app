@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  faFaceSmile,
-  faImage,
-  faUser,
-} from "@fortawesome/free-regular-svg-icons";
+import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Box,
@@ -15,15 +11,18 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import {
-  faCheckToSlot,
-  faLocationDot,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
-import { PostData } from "../../types/PostType";
+import { PostUploadData } from "../../types/PostType";
 import { uploadPost } from "../../services/postServices";
 import { enqueueSnackbar } from "notistack";
+import { IoImageOutline } from "react-icons/io5";
+import { GoSmiley } from "react-icons/go";
+import { LiaVoteYeaSolid } from "react-icons/lia";
+import { MdOutlinePlace } from "react-icons/md";
+import { useDispatch } from "react-redux";
+import { postUpload } from "../../features/post/PostUploadSlice";
+import { InfoUser } from "../../types/AuthType";
 
 interface DialogUploadPostProps {
   open: boolean;
@@ -42,8 +41,9 @@ const style = {
 
 const DialogUploadPost = (props: DialogUploadPostProps) => {
   // Lấy thông tin người dùng từ Redux store
-  const user = useSelector((state: any) => state.auth);
-  console.log("user", user);
+  const user: InfoUser = useSelector((state: any) => state.auth);
+
+  const dispatch = useDispatch();
 
   // Khởi tạo state cho quyền riêng tư và hình ảnh xem trước
   const [privacy, setPrivacy] = React.useState<string>("Public");
@@ -52,14 +52,13 @@ const DialogUploadPost = (props: DialogUploadPostProps) => {
   >([]);
 
   // Khởi tạo state cho bài đăng
-  const [postValue, setPostValue] = React.useState<PostData>({
+  const [postValue, setPostValue] = React.useState<PostUploadData>({
     content: "",
     images: [],
     visibility: privacy,
     userId: "",
   });
 
-  console.log("postValue", postValue);
   // Hàm xử lý thay đổi quyền riêng tư
   const handleChange = (event: SelectChangeEvent) => {
     setPrivacy(event.target.value);
@@ -93,16 +92,17 @@ const DialogUploadPost = (props: DialogUploadPostProps) => {
   // Hàm upload bài đăng
   const uploadPostData = async () => {
     try {
-      setPostValue({
+      const postToSend = {
         ...postValue,
-        userId: user.id,
-      });
-      const response = await uploadPost(postValue);
-      console.log("response", response);
+        userId: user.id, // đảm bảo có ID
+      };
+
+      const response = await uploadPost(postToSend);
       if (response) {
         enqueueSnackbar("Đăng bài thành công!", {
           variant: "success",
         });
+        dispatch(postUpload(response)); // Cập nhật Redux store với bài đăng mới
         props.handleClose(); // Đóng modal sau khi đăng thành công
       }
     } catch (error) {
@@ -189,7 +189,7 @@ const DialogUploadPost = (props: DialogUploadPostProps) => {
               <div className="flex flex-row items-center gap-5 mt-2">
                 <div>
                   <label htmlFor="image" className="cursor-pointer">
-                    <FontAwesomeIcon icon={faImage} size="lg" />
+                    <IoImageOutline size="1.5em" />
                   </label>
                   <input
                     multiple
@@ -202,9 +202,9 @@ const DialogUploadPost = (props: DialogUploadPostProps) => {
                     }
                   />
                 </div>
-                <FontAwesomeIcon icon={faFaceSmile} size="lg" />
-                <FontAwesomeIcon icon={faCheckToSlot} size="lg" />
-                <FontAwesomeIcon icon={faLocationDot} size="lg" />
+                <GoSmiley size="1.5em" />
+                <LiaVoteYeaSolid size="1.5em" />
+                <MdOutlinePlace size="1.5em" />
               </div>
             </div>
           </div>

@@ -6,7 +6,7 @@ interface NoDataProps {
 
 const NoData = (props: NoDataProps) => {
   return (
-    <div className="no_data">
+    <div className="no_data w-full">
       <div className="text-center my-10">
         <p className="text-gray-500">{props.message}</p>
       </div>

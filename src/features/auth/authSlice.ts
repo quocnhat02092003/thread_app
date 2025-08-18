@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { InfoUser } from "../../types/AuthType";
 
 const initialState : InfoUser = {
-        id: 0,
+        id: "",
         username: "",
         displayName: "",
         follower: 0,
@@ -19,32 +19,13 @@ const authSlice = createSlice({
     initialState: initialState,
     reducers:{
         login: (state, action) => {
-            state.id = action.payload.id;
-            state.username = action.payload.username;
-            state.displayName = action.payload.displayName;
-            state.follower = action.payload.follower;
-            state.avatarURL = action.payload.avatarURL;
-            state.introduction = action.payload.introduction;
-            state.anotherPath = action.payload.anotherPath;
-            state.verified = action.payload.verified;
-            state.createdAt = action.payload.createdAt;
+            return { ...state, ...action.payload}
         },
         logout: (state) => {
-            state = {
-                id: 0,
-                username: "",
-                displayName: "",
-                follower: 0,
-                avatarURL: "",
-                introduction: "",
-                anotherPath: "",
-                verified: false,
-                createdAt: new Date(),
-                needMoreInfoUser : true
-            };
+            return initialState;
         },
         updateUser: (state, action) => {
-            state = { ...state, ...action.payload };
+            return { ...state, ...action.payload }
         }
     }
 })

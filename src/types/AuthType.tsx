@@ -12,7 +12,7 @@ interface AuthType {
 }
 
 interface InfoUser {
-  id: number;
+  id: string;
   username: string;
   displayName: string;
   follower: number;
@@ -22,6 +22,7 @@ interface InfoUser {
   verified: boolean;
   createdAt: Date;
   needMoreInfoUser: boolean;
+  isFollowing?: boolean;
 }
 
 export type { AuthType, InfoUser };

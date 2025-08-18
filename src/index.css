@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 body {
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 }
 
 code {
@@ -14,7 +14,7 @@ code {
     monospace;
 }
 
-h1 {
+h1 { 
   display: block;
   font-size: 2em;
   margin-top: 0.67em;

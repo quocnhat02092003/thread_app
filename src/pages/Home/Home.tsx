@@ -1,91 +1,74 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Post from "../../components/Post/Post";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import UploadPost from "../../components/UploadPost/UploadPost";
 import { GetAllPostsFromAllUsers } from "../../services/featureServices";
+import { clearPostUpload } from "../../features/post/PostUploadSlice";
+import { PostData } from "../../types/PostType";
+import { InfoUser } from "../../types/AuthType";
 
 const Home: React.FC = () => {
-  const user = useSelector((state: any) => state.auth);
+  const dispatch = useDispatch();
+  const user: InfoUser = useSelector((state: any) => state.auth);
+  const newPost: PostData = useSelector((state: any) => state.postUpload);
 
-  const [posts, setPosts] = React.useState<any[]>([]);
+  const [posts, setPosts] = React.useState<PostData[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [start, setStart] = React.useState<number>(1);
+  const [page, setPage] = React.useState<number>(1);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
 
   document.title = "Trang chủ | Threads.net";
 
-  // // Fetch posts
-  // const fetchPosts = async () => {
-  //   if (loading || !hasMore) return;
+  const fetchPosts = async (pageNumber: number) => {
+    if (loading || !hasMore) return;
 
-  //   setLoading(true);
-  //   try {
-  //     const response = await fetch(
-  //       `https://jsonplaceholder.typicode.com/posts?start=${start}&_limit=10`
-  //     );
-  //     const data = await response.json();
+    setLoading(true);
 
-  //     // Nếu ít hơn limit, coi như hết
-  //     if (data.length < 10) {
-  //       setHasMore(false);
-  //     }
-
-  //     setPosts((prevPosts) => [...prevPosts, ...data]);
-  //     setStart((prevStart) => prevStart + 1);
-  //   } catch (err) {
-  //     console.error("Error fetching posts:", err);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // // Load đầu tiên
-  // React.useEffect(() => {
-  //   fetchPosts();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
-  // // Infinite scroll listener
-  // React.useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (
-  //       window.innerHeight + document.documentElement.scrollTop + 100 >=
-  //       document.documentElement.scrollHeight
-  //     ) {
-  //       fetchPosts();
-  //     }
-  //   };
-
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => window.removeEventListener("scroll", handleScroll);
-  // }, [loading, hasMore, start]); // chú ý dependencies
+    try {
+      const response = await GetAllPostsFromAllUsers(pageNumber);
+      if (response.length < 10) {
+        setHasMore(false);
+      }
+      setPosts((prev) => [...prev, ...response]);
+      setPage((prev) => prev + 1);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   React.useEffect(() => {
-    const fetchPosts = async () => {
-      setLoading(true);
-      try {
-        // Giả sử bạn có một hàm để lấy bài viết từ API
-        const response = await GetAllPostsFromAllUsers();
-        setPosts(response);
-        console.log("Posts fetched:", response);
-        if (response.data.length < 10) {
-          setHasMore(false);
-        }
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      } finally {
-        setLoading(false);
+    fetchPosts(page);
+  }, [page]);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - 200
+      ) {
+        fetchPosts(page);
       }
     };
-    // setPosts(fetchedPosts);
-    fetchPosts();
-  }, []);
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [fetchPosts]);
+
+  React.useEffect(() => {
+    if (newPost && newPost.id && user.username) {
+      setPosts((prev) => [newPost, ...prev]);
+    }
+    dispatch(clearPostUpload());
+  }, [newPost, user.username, dispatch]);
+
   return (
     <div>
       <div>
         <Link to="/">
-          <h3 className="text-center">Trang chủ</h3>
+          <h3 className="text-center my-5">Trang chủ</h3>
         </Link>
       </div>
       <div className="w-[90vh] mx-auto">
@@ -106,9 +89,10 @@ const Home: React.FC = () => {
             shareCount={post.shareCount}
             postId={post.id}
             postCreatedAt={post.createdAt}
-            repostCount={post.repostCount}
+            repostCount={post.reupCount}
             postUser={post.user}
             followersCount={post.user.follower}
+            isLiked={post.isLiked}
           />
         ))}
 

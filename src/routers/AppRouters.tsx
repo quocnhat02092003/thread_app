@@ -13,6 +13,7 @@ import HomeLayout from "../layouts/HomeLayout";
 import Search from "../pages/Search/Search";
 import Profile from "../pages/Profile/Profile";
 import PostInfo from "../pages/Post/PostInfo";
+import Notifications from "../pages/Notifications/Notifications";
 
 const AppRouters: React.FC = () => {
   return (
@@ -30,6 +31,7 @@ const AppRouters: React.FC = () => {
                 <Route path="/search" element={<Search />} />
                 <Route path="/profile/:username" element={<Profile />} />
                 <Route path="/:id_user/post/:id_post" element={<PostInfo />} />
+                <Route path="/notifications" element={<Notifications />} />
               </Route>
               {/*Add information use AuthLayout*/}
               <Route

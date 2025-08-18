@@ -6,7 +6,7 @@ import { AuthType } from "../../types/AuthType";
 import { LoginUser } from "../../services/authServices";
 import { enqueueSnackbar } from "notistack";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../features/auth/authSlice";
+import { login } from "../../features/auth/AuthSlice";
 
 const Login: React.FC = () => {
   //Dispatch
