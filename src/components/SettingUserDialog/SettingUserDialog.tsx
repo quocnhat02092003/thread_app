@@ -17,8 +17,8 @@ import {
 } from "@mui/material";
 // import { Close as CloseIcon } from "@mui/icons-material";
 import { InfoUser } from "../../types/AuthType";
-import { useSelector } from "react-redux";
-import { RootState } from "../../app/store";
+import { useSelector, useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../../app/store";
 import PersonalInfoTab from "./tabs/PersonalInfoTab";
 import SecurityTab from "./tabs/SecurityTab";
 import NotificationsTab from "./tabs/NotificationsTab";
@@ -27,6 +27,7 @@ import { UpdateDataUser } from "../../services/settingAccountServices";
 import { enqueueSnackbar } from "notistack";
 import { LogoutUser } from "../../services/authServices";
 import { useNavigate } from "react-router-dom";
+import { logout, updateUser } from "../../features/auth/AuthSlice";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -99,6 +100,8 @@ const SettingUserDialog = () => {
   const [hasChanges, setHasChanges] = React.useState(false);
   const [logOutOpen, setLogoutOpen] = React.useState(false);
 
+  const dispatch = useDispatch<AppDispatch>();
+
   const navigate = useNavigate();
 
   // Settings state
@@ -159,7 +162,11 @@ const SettingUserDialog = () => {
     const UpdatePersonalData = async () => {
       try {
         const response = await UpdateDataUser(data);
-        enqueueSnackbar(response.message, { variant: "success" });
+        if (response) {
+          enqueueSnackbar(response.message, { variant: "success" });
+          // Update user data in Redux store
+          dispatch(updateUser(data));
+        }
       } catch (error: any) {
         error.response &&
           enqueueSnackbar(error.response.data, { variant: "error" });
@@ -202,6 +209,7 @@ const SettingUserDialog = () => {
       if (response) {
         enqueueSnackbar(response.message, { variant: "success" });
         navigate("/login");
+        dispatch(logout());
       }
     } catch (error: any) {
       error.response &&
