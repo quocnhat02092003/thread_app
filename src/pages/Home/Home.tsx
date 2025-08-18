@@ -16,35 +16,31 @@ const Home: React.FC = () => {
 
   const [posts, setPosts] = React.useState<PostData[]>([]);
   const [page, setPage] = React.useState<number>(1);
-  const [hasMore, setHasMore] = React.useState<boolean>(true); // Bắt đầu với true
-  const [loading, setLoading] = React.useState<boolean>(false); // Thêm loading state
+  const [hasMore, setHasMore] = React.useState<boolean>(true);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   document.title = "Trang chủ | Threads.net";
 
   const fetchPosts = async (pageNumber: number) => {
-    if (loading) return; // Tránh gọi API nhiều lần cùng lúc
+    if (loading) return;
 
     try {
       setLoading(true);
-      const response = await GetAllPostsFromAllUsers(pageNumber, 10); // Truyền limit = 10
+      const response = await GetAllPostsFromAllUsers(pageNumber, 10);
 
       if (!response || response.length === 0) {
         setHasMore(false);
         return;
       }
 
-      // Nếu là trang đầu tiên, thay thế posts
       if (pageNumber === 1) {
         setPosts(response);
       } else {
-        // Nếu không phải trang đầu, thêm vào cuối
         setPosts((prev) => [...prev, ...response]);
       }
 
-      // Chỉ tăng page sau khi đã set posts thành công
       setPage(pageNumber + 1);
 
-      // Nếu response ít hơn expected items per page thì không còn data
       if (response.length < 10) {
         setHasMore(false);
       }
@@ -68,7 +64,6 @@ const Home: React.FC = () => {
   }, [newPost, user.username, dispatch]);
 
   const loadMore = () => {
-    console.log("LoadMore called, current page:", page);
     fetchPosts(page);
   };
 
