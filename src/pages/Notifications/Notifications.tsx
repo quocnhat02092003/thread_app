@@ -10,7 +10,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
-import { getAllNotificationsUser } from "../../services/notificationsServices";
+import {
+  getAllNotificationsUser,
+  markNotificationAsRead,
+} from "../../services/notificationsServices";
 import { Link } from "react-router-dom";
 import { NotificationPayload } from "../../types/NotificationType";
 import { InfoUser } from "../../types/AuthType";
@@ -67,6 +70,20 @@ const Notifications: React.FC = () => {
 
     fetchNotifications();
   }, []);
+
+  //Mark-as-read notifications
+  const handleMarkAsRead = async () => {
+    try {
+      const response = await markNotificationAsRead();
+      if (response) {
+        setNotifications((prev) =>
+          prev.map((n) => (n.isRead ? n : { ...n, isRead: true }))
+        );
+      }
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+    }
+  };
 
   // Handle real-time notifications
   useEffect(() => {
@@ -258,9 +275,7 @@ const Notifications: React.FC = () => {
       <div className="mt-6 pt-4 border-t border-gray-200">
         <button
           className="w-full py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-lg transition-colors font-medium"
-          onClick={() => {
-            console.log("Mark all as read");
-          }}
+          onClick={handleMarkAsRead}
         >
           Đánh dấu tất cả là đã đọc
         </button>

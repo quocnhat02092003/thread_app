@@ -69,7 +69,7 @@ const HomeLayout: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-row w-full h-screen overflow-y-scroll">
+    <div className="flex flex-row w-full h-screen">
       {/* Navbar */}
       <div className="fixed">
         <Sidebar />

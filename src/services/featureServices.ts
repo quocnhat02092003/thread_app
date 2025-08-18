@@ -10,14 +10,14 @@ export const GetDataProfileUser = async (username: string) => {
   }
 }
 
-export const GetAllPostsFromAllUsers = async (page : number) => {
+export const GetAllPostsFromAllUsers = async (page: number, limit: number) => {
   try {
-    const response = await API.get(`api/feature/all-posts?_page=${page}&_limit=10`);
+    const response = await API.get(`api/feature/all-posts?_page=${page}&_limit=${limit}`);
     return response.data;
   } catch (error) {
     throw error;
   }
-}
+};
 
 export const GetPostById = async (postId: string) => {
   try {
