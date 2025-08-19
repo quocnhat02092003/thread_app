@@ -14,6 +14,7 @@ import Search from "../pages/Search/Search";
 import Profile from "../pages/Profile/Profile";
 import PostInfo from "../pages/Post/PostInfo";
 import Notifications from "../pages/Notifications/Notifications";
+import GuestRoute from "./GuestRouters";
 
 const AppRouters: React.FC = () => {
   return (
@@ -51,25 +52,37 @@ const AppRouters: React.FC = () => {
               <Route
                 path="/login"
                 element={
-                  <AuthLayout>
-                    <Login />
-                  </AuthLayout>
+                  <GuestRoute
+                    element={
+                      <AuthLayout>
+                        <Login />
+                      </AuthLayout>
+                    }
+                  />
                 }
               />
               <Route
                 path="/register"
                 element={
-                  <AuthLayout>
-                    <Register />
-                  </AuthLayout>
+                  <GuestRoute
+                    element={
+                      <AuthLayout>
+                        <Register />
+                      </AuthLayout>
+                    }
+                  />
                 }
               />
               <Route
                 path="/forgot_password"
                 element={
-                  <AuthLayout>
-                    <Register />
-                  </AuthLayout>
+                  <GuestRoute
+                    element={
+                      <AuthLayout>
+                        <Register />
+                      </AuthLayout>
+                    }
+                  />
                 }
               />
             </Routes>
