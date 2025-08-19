@@ -25,7 +25,7 @@ export const usePostHub = () => {
 
   useEffect(() => {
     const connection = new SignalR.HubConnectionBuilder()
-      .withUrl("http://localhost:5277/postHub")
+      .withUrl(`${process.env.REACT_APP_SIGNALR_URL}/postHub`)
       .withAutomaticReconnect()
       .build()
 

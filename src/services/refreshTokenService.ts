@@ -1,14 +1,9 @@
 import axios, { AxiosInstance } from "axios";
+import dotenv from "dotenv"
 
-const API: AxiosInstance = axios.create({baseURL: 'http://localhost:5277', withCredentials: true});
+dotenv.config();
 
-// let accessToken: string = ""
-// API.interceptors.request.use((config) => {
-//   if (accessToken){
-//     config.headers.Authorization = `Bearer ${accessToken}`;
-//   }
-//   return config;
-// })
+const API: AxiosInstance = axios.create({baseURL: process.env.REACT_APP_API_URL, withCredentials: true});
 
 API.interceptors.response.use(
   (response) => response,
@@ -19,7 +14,7 @@ API.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await axios.post("http://localhost:5277/api/auth/refresh-token", {}, { withCredentials: true })
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/refresh-token`, {}, { withCredentials: true })
         return API(originalRequest); // Retry request
       } catch (refreshError) {
         console.error("Refresh token failed");

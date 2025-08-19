@@ -1,6 +1,9 @@
 import * as SignalR from "@microsoft/signalr"
 import React from "react"
 import { NotificationPayload } from "../types/NotificationType"
+import dotenv from "dotenv"
+
+dotenv.config();
 
 export const useNotificationsHub = () => {
     const connectionRef = React.useRef<SignalR.HubConnection>()
@@ -8,7 +11,7 @@ export const useNotificationsHub = () => {
     
       React.useEffect(() => {
         const connection = new SignalR.HubConnectionBuilder()
-          .withUrl("http://localhost:5277/notificationsHub", {
+          .withUrl(`${process.env.REACT_APP_SIGNALR_URL}/notificationsHub`, {
             withCredentials: true,
           })
           .withAutomaticReconnect()
